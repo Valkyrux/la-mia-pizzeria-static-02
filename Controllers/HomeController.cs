@@ -15,13 +15,44 @@ namespace la_mia_pizzeria_static.Controllers
 
         public IActionResult Index()
         {
-            Pizzeria pizzeria = new Pizzeria("Pizza Pazza");
-            pizzeria.addPizza(new Pizza("Capricciosa", "Pizza molto buona, per tutti con funghi e altro", "capricciosa.jpg", 10.50));
-            pizzeria.addPizza(new Pizza("4 formaggi", "Pizza molto buona, per tutti con 4 formaggi", "4form.webp", 7.80));
-            pizzeria.addPizza(new Pizza("Diavola", "Pizza molto buona, piccante", "d1.jpg", 15.00));
-            pizzeria.addPizza(new Pizza("Margherita", "La più semplice tra le pizze", "margh.jpg", 13.05));
-            ViewData["nomePizzeria"] = pizzeria.Nome;
-            ViewData["listaPizze"] = pizzeria.listaPizze;
+            string nome = "Giacomo";
+            string cognome = "Leopoldi";
+            ViewBag.nome = nome;
+            ViewBag.cognome = cognome;
+
+            int sommaNumeri(int numeroFinale)
+            {               
+                int somma = 0;
+                while (numeroFinale > 0) { somma += numeroFinale; numeroFinale = numeroFinale - 1; };
+                return somma;
+            }
+
+            int numeroMassimo = 10;
+            ViewBag.numeroMassimo = numeroMassimo;  
+            ViewBag.sommaDiNumeri = sommaNumeri(numeroMassimo);
+         
+            int numeroDiCaratteri(string frase, string carattere)
+            {
+                return frase.Length - frase.Replace(carattere, "").Length;
+            }
+
+            string frase = "Nel mezzo del cammin di nostra vita";
+            ViewBag.frase = frase;
+            ViewBag.numeroDiCarattereNellaFrase = numeroDiCaratteri(frase, "a");
+
+            List<int> listaDiInteri = new List<int>();
+            for (int i = 0; i < 20; i++)
+            {
+                Random r = new Random();
+                int randomInt = r.Next(1, 90);
+                if(randomInt > 20 && randomInt < 70)
+                {
+                    listaDiInteri.Add(randomInt);
+                }
+            }
+
+            ViewBag.listaDiInteri = listaDiInteri;
+
             return View();
         }
 

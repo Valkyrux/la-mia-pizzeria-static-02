@@ -1,46 +1,51 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Html
+@using System.Globalization;
+@{
     ViewData["Title"] = ViewData["nomePizzeria"];
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Dictionary<string, string> TraduttoreGiorniDellaSettimana = new Dictionary<string, string>() {
+        { "monday", "Lunedì" },
+        { "tuesday", "Martedì" },
+        { "wednesday", "Mercoledì" },
+        { "thursday", "Giovedì" },
+        { "friday", "Venerdì" },
+        { "saturday", "Sabato" },
+        { "sunday", "Domenica" }
+    };
+
+    CultureInfo serverCulture = CultureInfo.CurrentCulture;
+
+    Func<dynamic, IHtmlContent> StampaStringa(string stringa) =>
+    @<h3 class="text-primary">@stringa</h3>
+    ;    
 }
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>@ViewData["Title"]</title>
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/la_mia_pizzeria_static.styles.css" asp-append-version="true" />
-    </head>
-    <body>
-        <div>
-            <h1 class="display-4 text-center">Benvenuto in @ViewData["nomePizzeria"]</h1>
-            <div class="container">
-                <div class="row">
-                    @foreach(var element in ViewData["listaPizze"] as List<Pizza>)
-                    {
-                        <div class="col-12 col-sm-6 col-md-3 mb-2">
-                            <div class="card">
-                                <div class="card-img-top">
-                                    <img src="~/img/@element.ImgPath" alt="@element.Name">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">@element.Name</h5>
-                                    <p class="card-text">"@element.Description"</p>
-                                    <p>@element.Price &euro;</p>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
-            </div>
+@section mainContent{
+    <div class="col-9">
+        <div class="row">
+            <h1>@ViewBag.nome @ViewBag.cognome</h1>
+            
+            <span>La somma dei primi @ViewBag.numeroMassimo interi fa @ViewBag.sommaDiNumeri</span>
+            <p>La frase "@ViewBag.frase" contiene @ViewBag.numeroDiCarattereNellaFrase volte la lettera 'a'</p>
+            <h2>Risultato di 20 interi compresi tra 1 e 99 filtrando quelli contenuti tra 20 e 70</h2>
+            
+            <ul>
+            @foreach(int intero in ViewBag.listaDiInteri)
+            {
+                <li>@intero</li>
+            }
+            </ul>
+            
+            <p>DateTime di oggi: @DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")</p>
+            <p>DateTime di 7 giorni fa: @DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd hh:mm:ss")</p>
+            <p>Oggi &egrave; @TraduttoreGiorniDellaSettimana[DateTime.Now.DayOfWeek.ToString().ToLower()].ToUpper() (Lingua del giorno italiano, ottenuta con dizionario)</p>
+            <p>Tra un anno sar&agrave; @DateTime.Now.AddYears(1).ToString("dddd", serverCulture).ToUpper() (La lingua del giorno &egrave; impostata sulla lingua del server)</p>
         </div>
+    </div>
+}
 
-        <footer class="border-top footer text-muted">
-            <div class="container">
-                &copy; 2022 - Valkyrux - <a asp-area="" asp-controller="Home"></a>
-            </div>
-        </footer>
-    </body>
-</html>
+@section sezione {
+    <div class="col-3">
+        @StampaStringa("Sono una stringa, parametro di una funzione che ritorna una funzione che ritorna un elemento che viene elaborato da Razor!")(null)
+    </div>
+}
